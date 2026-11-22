@@ -260,6 +260,7 @@ $('refreshModels').onclick=()=>{draftKeys.gemini=$('key').value.trim();loadGemin
 $('save').onclick=()=>{
  draftKeys[draftProvider]=$('key').value.trim();draftModels[draftProvider]=$('model').value;
  const oldProvider=provider;
+ if(oldProvider!==draftProvider)fresh(); // 先按旧服务商保存当前会话，避免历史记录被错误归类
  provider=draftProvider;keys={...draftKeys};key=keys[provider];modelSelections={...draftModels};
  for(const kind of ['deepseek','gemini']){
   if(keys[kind])localStorage.setItem(KEY_NAMES[kind],keys[kind]);
@@ -270,7 +271,6 @@ $('save').onclick=()=>{
  localStorage.setItem('gemini_model',modelSelections.gemini);
  localStorage.ds_system=$('system').value;
  $('settings').close();
- if(oldProvider!==provider)fresh();
  modelLabel();
  if(provider==='gemini'&&keys.gemini)loadGeminiModels(keys.gemini);
 };$('send').onclick=send;$('stop').onclick=()=>controller?.abort();$('new').onclick=$('clear').onclick=fresh;currentId='chat-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);history=[];$('prompt').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}})();
